@@ -67,10 +67,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										</div>
 										<div class="signup">
 											<form>
-												<input type="text" class="email" placeholder="Email" maxlength="10" pattern="[1-9]{1}\d{9}" title="Enter a valid Email" />
+												<input type="text" id="email" class="email" placeholder="Email" title="Enter a valid Email" />
+												<input type="password" id="passwd" class="password" placeholder="password" />
 											</form>
 											<div class="continue-button">
-												<a href="#small-dialog3" class="hvr-shutter-out-horizontal play-icon popup-with-zoom-anim">CONTINUE</a>
+												<a href="#small-dialog3" class="hvr-shutter-out-horizontal play-icon popup-with-zoom-anim">SignUp</a>
 											</div>
 										</div>
 										<div class="clearfix"> </div>
