@@ -17,12 +17,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <link href="css/dashboard.css" rel="stylesheet">
 <!-- Custom Theme files -->
 <link href="css/style.css" rel='stylesheet' type='text/css' media="all" />
-<script src="js/jquery-1.11.1.min.js"></script>
+<!-- <script src="js/jquery-1.11.1.min.js"></script> -->
 <!--start-smoth-scrolling-->
 <!-- fonts -->
 <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 <link href='//fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
 <!-- //fonts -->
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
   <body>
 
@@ -71,13 +72,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 												<input type="password" id="passwd" class="password" placeholder="password" />
 											</form>
 											<div class="continue-button">
-												<a href="#small-dialog3" class="hvr-shutter-out-horizontal play-icon popup-with-zoom-anim">SignUp</a>
+												<a href="#" id="signup" class="hvr-shutter-out-horizontal play-icon popup-with-zoom-anim">SignUp</a>
 											</div>
 										</div>
 										<div class="clearfix"> </div>
 									</div>	
 									<div id="small-dialog3" class="mfp-hide">
-										<h3>Create Account</h3> 
+										<h3>Create Account2</h3> 
 										<div class="social-sits">
 											<div class="facebook-button">
 												<a href="#">Connect with Facebook</a>
@@ -279,3 +280,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					
 				</div>
         </div>
+
+<script>
+	$("#signup" ).click(function() {
+		alert("haha")
+	});
+</script>		
