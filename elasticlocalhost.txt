@@ -1,0 +1,227 @@
+https://techexpert.tips/ko/category/%ed%83%84%ec%84%b1-%ea%b2%80%ec%83%89/
+https://12bme.tistory.com/483
+https://qbox.io/blog/maximize-guide-elasticsearch-indexing-performance-part-2/
+https://d2.naver.com/helloworld/273788
+https://november11tech.tistory.com/149
+https://danawalab.github.io/elastic/2020/05/20/Elasticsearch-basic-security.html
+
+https://gem1n1.tistory.com/88 -> 이거보고함
+
+54.180.100.216
+
+
+curl 'localhost:9200'
+전체 인덱스 조회 21.05.03
+curl -u elastic:soon06051007 -XGET 'localhost:9200/_cat/indices?v'
+yellow open   eve         pU-J8ZmtQxO9jzRjmWC7zw   1   1    1404772       109843    478.7mb        478.7mb
+
+
+
+curl -u elastic:soon06051007 'localhost:9200'
+
+인덱스추가
+curl -u elastic:000000 -XPUT 'localhost:9200/eve?pretty'
+
+다큐멘트추가
+
+curl -XPUT localhost:9200/eve/_doc/1 -H 'Content-Type: application/json' -d'{"name": "Jongmin Kim2","message": "안녕하세요 Elasticsearch2"}'
+
+curl -XPOST localhost:9200/customer2/info/1?pretty -H 'Content-Type: application/json' -d '{ "name": "victolee" }'
+
+curl -XPOST localhost:9200/customer2/info?pretty -H 'Content-Type: application/json' -d '{"name": "victolee2"}'
+
+curl -XPOST localhost:9200/eve/_doc/free_00001?pretty -H 'Content-Type: application/json' -d '{"sitename": "free","cnt":2500}'
+curl -XPUT localhost:9200/eve/_doc/free_00001?pretty -H 'Content-Type: application/json' -d '{"sitename": "free","cnt":500}'
+curl -XPUT localhost:9200/eve/_doc/free_00002?pretty -H 'Content-Type: application/json' -d '{"sitename": "free","cnt":1500}'
+
+curl -XPOST 'localhost:9200/customer2/info/2?pretty' -H 'Content-Type: application/json' -d @data.json
+
+curl -XPOST localhost:9200/ebogood/post/clien_free_15365244?pretty -H 'Content-Type: application/json' -d '{"site_name": "clien", "multi": "free", "site_domain": "http://www.clien.net", "subject": "현재 페이스북에 클리앙 게시물이 링크되지 않습니다.", "url": "http://www.clien.net/service/board/annonce/15365244", "site_num": "15365244", "uid": "clien_free_15365244", "site_reg_date": "2020/09/09 14:01:22", "site_cnt": "193 "}'
+
+
+curl -u elastic:000000 -XPUT localhost:9200/eve/_doc/ssfree_38196036?pretty -H 'Content-Type: application/json' -d '{"site_name": "slrclub", "multi": "free", "site_domain": "http://www.slrclub.com", "subject": "아무도 없는 아침 텐트 풍경 [4]", "url": "http://www.slrclub.com/bbs/vx2.php?id=free&page=724481&no=38196036", "site_num": 38196036, "uid": "slrclub_free_38196036", "site_reg_date": "2020/11/16 09:32:16", "site_cnt": 5599}'
+
+
+
+
+
+조회
+curl -u elastic:soon06051007 -XGET 'localhost:9200/eve/_search?pretty'
+
+curl -XGET 'localhost:9200/eve/_search?pretty' -H 'Content-Type: application/json' -d '{"query": { "bool": { "filter": [ { "terms":  { "multi": "review" }}]}}}'
+
+curl -XGET 'localhost:9200/eve/_search?pretty' -H 'Content-Type: application/json' -d '{"query": {"bool": {"filter": [{"range": {"site_cnt": {"gt": "0"}}}], "must_not": [{"range": {"site_reg_date": {"lt": "2020/10/07"}}}, {"term": {"multi": "review"}}]}}, "size": 10, "from": 0,"sort": {"site_cnt":"asc"}}'
+
+curl -XGET 'localhost:9200/eve/_search?pretty' -H 'Content-Type: application/json' -d '{ "query": { "bool": { "filter": [ { "terms": { "site_name": ["ddanzi","clien","etoland","ppomppu","todayhumor","utdae","bobae","theqoo","slrclub","ruliweb"] } } ], "must": [ { "term": { "subject" : "아린" }} ] } }, "size": 50, "from": 0, "sort": { "site_reg_date":"desc" } }'
+
+
+curl -XGET 'localhost:9200/eve/_search?pretty' -H 'Content-Type: application/json' -d '{ "query": { "bool": { "filter": [ { "terms": { "site_name": ["etoland"] } }, { "range": { "site_cnt": { "gt": "0" } } } ], "must": [ { "term": { "subject" : "아린" }} ], "must_not": [ { "range": { "site_reg_date": { "lt": "2019/10/08 00:00:00" } } }, { "term": { "multi": "review" } } ] } }, "size": 50, "from": 0, "sort": {"site_reg_date":"desc"} }'
+
+
+curl -u elastic:soon06051007 -XGET 'localhost:9200/eve/_doc/slrclub_free_38055985?pretty' - 11월11일입력
+
+curl -XGET 'localhost:9200/eve/_doc/eto_star_281902?pretty'
+
+curl -XGET 'localhost:9200/_sql/translate?pretty' -H 'Content-Type: application/json' -d '{"query": "SELECT * FROM ebo"}'
+
+curl -X GET "localhost:9200/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+    "query": {
+        "match_phrase_prefix" : {
+            "subject" : "아침*"
+        }
+    }
+}'
+
+curl -u elastic:soon06051007 -X GET "localhost:9200/eve/_search?pretty" -H 'Content-Type: application/json' -d'{"query": {"query_string" : {"fields" : ["subject", "url"],"query" : "*아린*"}},"size": 100,	"from": 0,"sort": {"site_reg_date":"desc"}}'
+
+
+curl -u elastic:soon06051007 -X GET "localhost:9200/eve/_search?pretty" -H 'Content-Type: application/json' -d'{ "query": { "bool": { "filter": [ { "terms": { "site_name": ["ddanzi","clien","etoland","ppomppu","todayhumor","utdae","bobae","theqoo","slrclub","ruliweb"] } }, { "range": { "site_cnt": { "gt": "0" } } } ], "must_not": [ { "range": { "site_reg_date": { "lt": "2020/01/01 00:00:00" } } }, { "term": { "multi": "review" } } ] } }, "size": 50, "from": 0, "sort": {"site_reg_date":"desc"} }'
+
+
+
+
+
+{
+        "_index" : "eve",
+        "_type" : "_doc",
+        "_id" : "eto_star_281902",
+        "_score" : null,
+        "_source" : {
+          "site_name" : "etoland",
+          "multi" : "star",
+          "site_domain" : "http://www.etoland.co.kr",
+          "subject" : "엔딩요정 아린이 .GIF",
+          "url" : "http://www.etoland.co.kr/bbs/board.php?bo_table=star01&wr_id=281902&page=2",
+          "site_num" : 281902,
+          "uid" : "eto_star_281902",
+          "site_reg_date" : "2020/11/10 01:35:00",
+          "site_cnt" : 452
+        },
+        "sort" : [
+          1604972100000
+        ]
+      },
+
+
+
+curl -X GET "localhost:9200/eve/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+   "query" :{
+      "bool" : {             
+          "must" : [{"range": {"site_reg_date": {"gte": "2020/10/24 00:00:00","lte": "2020/10/24 23:59:59"}}}]
+      }
+    },
+	"size": 50,	
+	"from": 0,	
+	"sort": {"site_reg_date":"asc"}
+ }
+'
+
+curl -X GET "localhost:9200/eve/_search?pretty" -H 'Content-Type: application/json' -d'{ "query": { "query_string" : { "fields" : ["subject", "url"], "query" : "*아린*" } }, "size": 50, "from": 0, "sort": {"site_reg_date":"asc"} }'
+
+
+
+curl -X GET "localhost:9200/eve/_search?pretty" -H 'Content-Type: application/json' -d'{ "query": { "bool": { "filter": [ { "terms": { "site_name": ["ddanzi","clien","etoland","ppomppu","todayhumor","utdae","bobae","theqoo","slrclub","ruliweb"] } }, { "range": { "site_cnt": { "gt": "0" } } } ], "must_not": [ { "range": { "site_reg_date": { "lt": "2019/10/18 00:00:00" } } }, { "term": { "multi": "review" } } ] } }, "size": 50, "from": 0, "sort": {"site_reg_date":"desc"} }'
+
+
+
+매핑
+
+curl -XGET 'localhost:9200/eve/_mapping?pretty'
+
+curl -XPUT 'localhost:9200/ebo?pretty' -H 'Content-Type: application/json' -d '{"mappings": {"properties": {"site_cnt": {"type": "integer"}} }}'
+
+curl -XPUT 'localhost:9200/eve?pretty' -H 'Content-Type: application/json' -d '{ "mappings": { "properties": { "site_reg_date": { "type": "date", "format": "yyyy/MM/dd HH:mm:ss" }, "subject": { "type": "text" }, "site_name": { "type": "keyword" }, "multi": { "type": "keyword" }, "site_domain": { "type": "keyword" }, "url": { "type": "text" }, "site_num": { "type": "integer" }, "uid": { "type": "keyword" }, "site_cnt": { "type": "integer" } } } }'
+
+
+인덱스복사
+curl -XPOST "localhost:9200/_reindex?wait_for_completion=false" -H 'Content-Type: application/json' -d'{"source": {"index": "ebo"},  "dest": {"index": "ebogood"}}'
+
+
+
+특정값 삭제
+curl -s -XDELETE 'localhost:9200/ebo/_mapping' -d'{"properties" : {"site_cnt" : { "type" : "text" }}}'
+
+
+
+아이디조회
+curl -XGET 'localhost:9200/customer2/info/1?pretty'
+curl -XGET 'localhost:9200/eve/post/slrclub_free_38196036?pretty'
+
+curl -XGET 'localhost:9200/customer2/info/2?pretty&filter_path=_source'
+curl -XGET 'localhost:9200/customer2/info/2?pretty&filter_path=_source.name'
+
+수정
+curl -XPUT 'localhost:9200/customer2/info/1?pretty' -H 'Content-Type: application/json' -d '{  "name": "victolee_update" }'
+
+삭제 다큐멘트
+curl -XDELETE 'localhost:9200/customer2/info/1?pretty'
+
+삭제 인덱스
+curl -XDELETE 'localhost:9200/eve?pretty'
+curl -u elastic:000000 -XDELETE 'localhost:9200/.kibana'
+
+curl -XDELETE 'localhost:9200/eve?pretty'
+
+조회
+curl -XGET localhost:9200/_cat/indices?v
+curl -XGET localhost:9200/_cat/shards?v
+curl -H "Content-Type: application/json" localhost:9200/_cat/indices?v | grep -i kibana
+
+상태변경 -상태를 green으로 바꿔줌
+curl -XPUT 'localhost:9200/_settings?pretty' -d '{"index":{"number_of_replicas": 0}}' -H 'Content-Type: application/json'
+
+curl -XPOST 'localhost:9200/bank/account/_bulk?pretty&refresh' -H "Content-Type: application/json" --data-binary "@data.json"
+
+curl -XGET 'localhost:9200/_cat/indices?v'
+
+조회
+curl -XGET 'localhost:9200/bank/account/_search?q=age:39&pretty'
+
+curl -XGET 'localhost:9200/bank/account/_search?pretty' -H 'Content-Type: application/json' -d @query.json
+
+localhost:5601
+
+python3 /home/ebo/ppomppu_free_ela.py
+
+
+삭제
+
+curl -XDELETE 'localhost:9200/eve?pretty'
+
+키바나
+http://localhost:5601
+
+조건삭제
+
+curl -u elastic:soon06051007 -X POST 'localhost:9200/eve/_delete_by_query' -H 'Content-Type: application/json' -d'{
+    "query" : {
+        "match" : {
+            "site_reg_date" : "2021/12/22"
+        }
+    }
+}'
+
+
+curl -u elastic:soon06051007 -X GET "localhost:9200/eve/_search?pretty" -H 'Content-Type: application/json' -d'{
+  "query": {
+    "range": {
+      "site_reg_date": {
+         "gte": "2021/01/02 00:00:00"
+         }
+      }
+   }
+}'
+
+
+
+curl -u elastic:soon06051007 -X POST 'localhost:9200/eve/_delete_by_query?conflicts=proceed&pretty' -H 'Content-Type: application/json' -d'{
+  "query": {
+    "range": {
+      "site_reg_date": {
+         "gte": "2021/01/02 00:00:00"
+         }
+      }
+   }
+}'

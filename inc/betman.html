@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="jquery.js"></script>
+<script src="20180703.js"></script>
+</head>
+<body>
+test
+</body>
+
+<script>
+	console.log(memoryGameCount);
+    var jsonCheck = JSON.stringify(MemorySlipMark);//json으로 바꿈
+
+    var params='at='+jsonCheck;
+
+	$.ajax({
+			  type: 'post'
+			, url: 'jt2.php'
+			,data : params
+			, dataType : 'html'
+			, success: function(data) {
+					console.log(data);
+			  }
+		});	
+</script>
+</html>
