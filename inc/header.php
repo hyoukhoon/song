@@ -283,6 +283,28 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 <script>
 	$("#signup" ).click(function() {
-		alert("haha")
+		var email=$("#email").val();
+		var passwd=$("#passwd").val();
+
+		var params="id="+email+"&passwd="+passwd;
+        // console.log(params);
+        // return;
+        $.ajax({
+            type: 'post',
+            url: 'signup.php',
+            data : params,
+            dataType : 'json', 
+            success: function(data) {
+                if(data.result==1){
+                    alert(data.val);
+                    location.reload();
+                    return;
+                }else{
+                    alert(data.val);
+                    return;
+                }
+            }
+
+        });	
 	});
 </script>		
